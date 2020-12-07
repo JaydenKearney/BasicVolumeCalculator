@@ -162,6 +162,7 @@ public class Main {
             setSize(frameWidth,frameHeight);
             setLayout(null);
             setVisible(true);
+            setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         }
 
