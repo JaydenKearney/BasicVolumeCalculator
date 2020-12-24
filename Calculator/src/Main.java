@@ -102,23 +102,37 @@ public class Main {
                     SelectedShape.setText(sourceText);
                     switch (sourceText) {
                         case "Cube" -> {
+                            inputPanels[0].setVisible(true);
+                            lengthLabel.setText("Length: ");
                             inputPanels[1].setVisible(false);
                             inputPanels[2].setVisible(false);
                         }
-                        /*case "Sphere" -> {
-                            inputPanels[1].setVisible(true);
-                            inputPanels[2].setVisible(true);
+                        case "Sphere" -> {
+                            inputPanels[0].setVisible(true);
+                            lengthLabel.setText("Radius: ");
+                            inputPanels[1].setVisible(false);
+                            inputPanels[2].setVisible(false);
                         }
                         case "Cone" -> {
+                            inputPanels[0].setVisible(true);
+                            lengthLabel.setText("Radius: ");
+                            inputPanels[1].setVisible(true);
+                            inputPanels[2].setVisible(false);
 
                         }
                         case "Triangular Prism" -> {
-
-                        }*/
-
-                        default -> {
+                            inputPanels[0].setVisible(true);
+                            lengthLabel.setText("Length: ");
                             inputPanels[1].setVisible(true);
                             inputPanels[2].setVisible(true);
+                            //TODO Add another to be a hypotenuse.
+                        }
+
+                        default -> {
+                            inputPanels[0].setVisible(true);
+                            inputPanels[1].setVisible(true);
+                            inputPanels[2].setVisible(true);
+                            lengthLabel.setText("Length: ");
                         }
                     }
 
@@ -169,14 +183,26 @@ public class Main {
 
         private String CalcVolume(JLabel shape, JTextField length, JTextField height, JTextField depth) {
             //Calculates the volume of the selected shape with the selected side length
-            int lengthNum = Integer.parseInt(length.getText());
-            int heightNum = Integer.parseInt(height.getText());
-            int depthNum = Integer.parseInt(depth.getText());
+            float lengthNum = 0;
+            float heightNum = 0;
+            float depthNum = 0;
+            if(!length.getText().equals("")){
+                lengthNum = Integer.parseInt(length.getText());
+            }
+            if(!height.getText().equals("")){
+                heightNum = Integer.parseInt(height.getText());
+            }
+            if(!depth.getText().equals("")){
+                depthNum = Integer.parseInt(depth.getText());
+            }
 
             try{
                 return switch (shape.getText()) {
-                    case "Cube" -> String.valueOf(Math.pow(Double.parseDouble(length.getText()), 3));
-                    case "Rectangular Prism" -> String.valueOf((float)lengthNum * heightNum * depthNum);
+                    case "Cube" -> String.valueOf(Math.pow(lengthNum, 3));
+                    case "Rectangular Prism" -> String.valueOf(lengthNum * heightNum * depthNum);
+                    case "Sphere" -> String.valueOf((4f/3f) * Math.PI * (Math.pow(lengthNum, 3)));
+                    case "Cone" -> String.valueOf(Math.PI * (Math.pow(lengthNum, 2) * (heightNum/3)));
+                    case "Triangular Prism" -> "In Progress";
                     case "Select a shape" -> "Please select a shape";
                     default -> "Please input a length";
                 };
