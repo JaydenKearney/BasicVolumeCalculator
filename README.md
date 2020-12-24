@@ -5,4 +5,4 @@ I intend to keep working on this project slowly over time. Adding new features i
 
 This is a personal project, however I would like to hear feedback if there is something I have done wrong or could do better. 
 
-* The reason for the excusion of 4D shapes at this time is due to the amount of research needed into the math for these objects. If more time becomes available for more research it may get added in the future. 
+\* The reason for the excusion of 4D shapes at this time is due to the amount of research needed into the math for these objects. If more time becomes available for more research it may get added in the future. 
