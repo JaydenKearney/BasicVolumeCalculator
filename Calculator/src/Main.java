@@ -23,19 +23,27 @@ public class Main {
             JMenuItem[] prismItems = {rectPrism, triPrism};
             JMenuItem[] menuItems = {cube, prisms, cone, sphere};
             JLabel SelectedShape = new JLabel("Select a shape");
+
+            //Creating text fields for user inputs.
             JTextField lengthInput = new JTextField(),
                     heightInput = new JTextField(),
-                    depthInput = new JTextField(),
-                    timeInput = new JTextField();
-            JTextField[] inputs = {lengthInput, heightInput, depthInput, timeInput};
-            //4D calculations need some work to be able to implement
+                    depthInput = new JTextField();
+            JTextField[] inputs = {lengthInput, heightInput, depthInput};
 
+            //Creating labels to show which text field is where.
             JLabel lengthLabel = new JLabel("Input Length: "),
                     heightLabel = new JLabel("Input Height: "),
                     depthLabel = new JLabel("Input Depth: "),
-                    shapeLabel = new JLabel("Shape Name"),
+                    shapeLabel = new JLabel("Shape Name: "),
                     volumeLabel = new JLabel("Volume: ");
-            JLabel[] labels = {shapeLabel, lengthLabel, heightLabel, depthLabel,};
+            JLabel[] labels = {lengthLabel, heightLabel, depthLabel, shapeLabel};
+
+            //Creating the panels for each input to be contained in.
+            JPanel lengthPanel = new JPanel(),
+                    heightPanel = new JPanel(),
+                    depthPanel = new JPanel(),
+                    shapePanel = new JPanel();
+            JPanel[] inputPanels = {lengthPanel, heightPanel, depthPanel, shapePanel};
 
             JLabel volume = new JLabel("Result");
             JButton calculate = new JButton("Calculate");
@@ -47,11 +55,12 @@ public class Main {
                     //Finds which item has been selected and changes it to be selected.
                     JComboBox cb = (JComboBox)e.getSource();
                     String selectedMeasure = (String)cb.getSelectedItem();
-                    switch (selectedMeasure) {
+                    switch (Objects.requireNonNull(selectedMeasure)) {
                         case "mm" -> selectedMeasurement.setText("Millimeter/s");
                         case "cm" -> selectedMeasurement.setText("Centimeter/s");
                         case "m" -> selectedMeasurement.setText("Meter/s");
                         case "km" -> selectedMeasurement.setText("Kilometer/s");
+                        default -> selectedMeasurement.setText("Invalid Measurement");
                     }
                 }
             });
@@ -60,19 +69,25 @@ public class Main {
             Dimension menuItemStyle = new Dimension(50, 50);
             cube.setSize(menuItemStyle);
             rectPrism.setSize(menuItemStyle);
+
             int y = 100;
-            for (JLabel label : labels) {
-                label.setBounds(15, y, 100, 25);
+            int count = 0;
+            Color inputPanelBg = new Color(230,230,230);
+            for (JPanel inputPanel : inputPanels) {
+                inputPanel.setBounds(15, y, 250, 25);
+                inputPanel.setBackground(inputPanelBg);
+                inputPanel.setLayout(new BoxLayout(inputPanel,BoxLayout.X_AXIS));
+                try {
+                    inputPanel.add(labels[count]);
+                    inputPanel.add(inputs[count]);
+                }catch (Exception exception){
+                    inputPanel.add(labels[count]);
+                    inputPanel.add(SelectedShape);
+                }
                 y += 50;
-            }
-            y = 150;
-            for (JTextField input : inputs){
-                input.setBounds(125, y, 150, 25);
-                y += 50;
+                count += 1;
             }
 
-
-            SelectedShape.setBounds(125,100,150,25);
             volumeLabel.setBounds(25,400,150,25);
             volume.setBounds(75,400,150,25);
             calculate.setBounds(225, 400, 150,25);
@@ -87,27 +102,41 @@ public class Main {
                     SelectedShape.setText(sourceText);
                     switch (sourceText) {
                         case "Cube" -> {
-                            heightLabel.setVisible(false);
-                            heightInput.setVisible(false);
-                            depthLabel.setVisible(false);
-                            depthInput.setVisible(false);
+                            inputPanels[1].setVisible(false);
+                            inputPanels[2].setVisible(false);
                         }
+                        /*case "Sphere" -> {
+                            inputPanels[1].setVisible(true);
+                            inputPanels[2].setVisible(true);
+                        }
+                        case "Cone" -> {
+
+                        }
+                        case "Triangular Prism" -> {
+
+                        }*/
+
                         default -> {
-                            heightLabel.setVisible(true);
-                            heightInput.setVisible(true);
-                            depthLabel.setVisible(true);
-                            depthInput.setVisible(true);
+                            inputPanels[1].setVisible(true);
+                            inputPanels[2].setVisible(true);
                         }
                     }
 
                 }
             };
-            cube.addActionListener(shape);
-            rectPrism.addActionListener(shape);
+            for (JMenuItem mainItem: menuItems){
+                if (mainItem.getText().equals("Prisms")){
+                    for (JMenuItem groupedItem: prismItems){
+                        groupedItem.addActionListener(shape);
+                    }
+                }else{
+                    mainItem.addActionListener(shape);
+                }
+            }
             calculate.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    volume.setText(CalcVolume(SelectedShape, lengthInput, heightInput, depthInput, timeInput));
+                    volume.setText(CalcVolume(SelectedShape, lengthInput, heightInput, depthInput));
                 }
             });
 
@@ -118,21 +147,13 @@ public class Main {
             for (JMenuItem item : menuItems){
                 menuBar.add(item);
             }
-            /*menuBar.add(cube);
-            menuBar.add(rectPrism);
-            menuBar.add(tesseract);*/
             setJMenuBar(menuBar);
-            add(lengthLabel);
-            add(depthLabel);
-            add(heightLabel);
-            add(volumeLabel);
-            add(shapeLabel);
 
-            add(SelectedShape);
-            add(lengthInput);
-            add(depthInput);
-            add(heightInput);
-            add(timeInput);
+            //Adding the input panels
+            for (JPanel panel: inputPanels){
+                add(panel);
+            }
+
 
             add(volume);
             add(calculate);
@@ -146,7 +167,7 @@ public class Main {
 
         }
 
-        private String CalcVolume(JLabel shape, JTextField length, JTextField height, JTextField depth, JTextField time) {
+        private String CalcVolume(JLabel shape, JTextField length, JTextField height, JTextField depth) {
             //Calculates the volume of the selected shape with the selected side length
             int lengthNum = Integer.parseInt(length.getText());
             int heightNum = Integer.parseInt(height.getText());
@@ -156,7 +177,6 @@ public class Main {
                 return switch (shape.getText()) {
                     case "Cube" -> String.valueOf(Math.pow(Double.parseDouble(length.getText()), 3));
                     case "Rectangular Prism" -> String.valueOf((float)lengthNum * heightNum * depthNum);
-                    case "Tesseract" -> String.valueOf(Math.pow(Double.parseDouble(length.getText()), 4));
                     case "Select a shape" -> "Please select a shape";
                     default -> "Please input a length";
                 };
