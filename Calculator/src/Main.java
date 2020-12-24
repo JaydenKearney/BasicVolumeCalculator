@@ -19,10 +19,9 @@ public class Main {
                     rectPrism = new JMenuItem("Rectangular Prism"),
                     triPrism = new JMenuItem("Triangular Prism"),
                     cone = new JMenuItem("Cone"),
-                    sphere = new JMenuItem("Sphere"),
-                    tesseract = new JMenuItem("Tesseract");
+                    sphere = new JMenuItem("Sphere");
             JMenuItem[] prismItems = {rectPrism, triPrism};
-            JMenuItem[] menuItems = {cube, prisms, cone, sphere, tesseract};
+            JMenuItem[] menuItems = {cube, prisms, cone, sphere};
             JLabel SelectedShape = new JLabel("Select a shape");
             JTextField lengthInput = new JTextField(),
                     heightInput = new JTextField(),
@@ -34,10 +33,9 @@ public class Main {
             JLabel lengthLabel = new JLabel("Input Length: "),
                     heightLabel = new JLabel("Input Height: "),
                     depthLabel = new JLabel("Input Depth: "),
-                    timeLabel = new JLabel("Input Time: "),
                     shapeLabel = new JLabel("Shape Name"),
                     volumeLabel = new JLabel("Volume: ");
-            JLabel[] labels = {shapeLabel, lengthLabel, heightLabel, depthLabel, timeLabel};
+            JLabel[] labels = {shapeLabel, lengthLabel, heightLabel, depthLabel,};
 
             JLabel volume = new JLabel("Result");
             JButton calculate = new JButton("Calculate");
@@ -73,9 +71,6 @@ public class Main {
                 y += 50;
             }
 
-            //Time does not need to display automatically.
-            timeInput.setVisible(false);
-            timeLabel.setVisible(false);
 
             SelectedShape.setBounds(125,100,150,25);
             volumeLabel.setBounds(25,400,150,25);
@@ -96,25 +91,12 @@ public class Main {
                             heightInput.setVisible(false);
                             depthLabel.setVisible(false);
                             depthInput.setVisible(false);
-                            timeLabel.setVisible(false);
-                            timeInput.setVisible(false);
-                        }
-                        case "Tesseract" -> {
-                            heightLabel.setVisible(true);
-                            heightInput.setVisible(true);
-                            depthLabel.setVisible(true);
-                            depthInput.setVisible(true);
-                            timeLabel.setVisible(true);
-                            timeInput.setVisible(true);
-
                         }
                         default -> {
                             heightLabel.setVisible(true);
                             heightInput.setVisible(true);
                             depthLabel.setVisible(true);
                             depthInput.setVisible(true);
-                            timeLabel.setVisible(false);
-                            timeInput.setVisible(false);
                         }
                     }
 
@@ -122,7 +104,6 @@ public class Main {
             };
             cube.addActionListener(shape);
             rectPrism.addActionListener(shape);
-            tesseract.addActionListener(shape);
             calculate.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -145,7 +126,6 @@ public class Main {
             add(depthLabel);
             add(heightLabel);
             add(volumeLabel);
-            add(timeLabel);
             add(shapeLabel);
 
             add(SelectedShape);
@@ -171,7 +151,6 @@ public class Main {
             int lengthNum = Integer.parseInt(length.getText());
             int heightNum = Integer.parseInt(height.getText());
             int depthNum = Integer.parseInt(depth.getText());
-            int timeNum = Integer.parseInt(time.getText());
 
             try{
                 return switch (shape.getText()) {
