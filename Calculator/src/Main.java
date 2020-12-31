@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,7 +29,9 @@ public class Main {
             JMenuItem[] prismItems = {rectPrism, triPrism};
             JMenuItem[] pyramidItems = {triPyramid, squarePyramid};
             JMenuItem[] menuItems = {prisms, pyramids, cube, cone, sphere, torus, cylinder};
-            JLabel SelectedShape = new JLabel("Select a shape");
+
+            //Label for the users Selected Shape.
+            JLabel selectedShape = new JLabel("Select a shape");
 
             //Creating text fields for user inputs.
             JTextField lengthInput = new JTextField(),
@@ -40,8 +43,7 @@ public class Main {
             JLabel lengthLabel = new JLabel("Input Length: "),
                     heightLabel = new JLabel("Input Height: "),
                     depthLabel = new JLabel("Input Depth: "),
-                    shapeLabel = new JLabel("Shape Name: "),
-                    volumeLabel = new JLabel("Volume: ");
+                    shapeLabel = new JLabel("Shape Name: ");
             JLabel[] labels = {lengthLabel, heightLabel, depthLabel, shapeLabel};
 
             //Creating the panels for each input to be contained in.
@@ -88,14 +90,13 @@ public class Main {
                     inputPanel.add(inputs[count]);
                 }catch (Exception exception){
                     inputPanel.add(labels[count]);
-                    inputPanel.add(SelectedShape);
+                    inputPanel.add(selectedShape);
                 }
                 y += 50;
                 count += 1;
             }
 
-            volumeLabel.setBounds(25,400,150,25);
-            volume.setBounds(75,400,150,25);
+            volume.setBounds(10,400,200,25);
             calculate.setBounds(225, 400, 150,25);
             measurements.setBounds(300, 100, 50,25);
             selectedMeasurement.setBounds(300, 125, 75, 25);
@@ -105,7 +106,7 @@ public class Main {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     String sourceText = e.getActionCommand();
-                    SelectedShape.setText(sourceText);
+                    selectedShape.setText(sourceText);
                     switch (sourceText) {
                         case "Cube" -> {
                             inputPanels[0].setVisible(true);
@@ -172,10 +173,20 @@ public class Main {
             calculate.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    volume.setText(CalcVolume(SelectedShape, lengthInput, heightInput, depthInput));
+                    volume.setText(CalcVolume(selectedShape, lengthInput, heightInput, depthInput));
                 }
             });
 
+            //Styling
+            Border menuBorder = BorderFactory.createMatteBorder(0,1,0,1, Color.GRAY),
+                    resultBorder = BorderFactory.createRaisedBevelBorder();
+            volume.setBorder(resultBorder);
+
+            //Setting Application Icon and Taskbar Icon
+            ImageIcon iconImage = new ImageIcon("icon.png");
+            setIconImage(iconImage.getImage());
+
+            /*Adding everything to be shown on the JFrame.*/
             //Adding items to frame and adjusting frame settings.
             for (JMenuItem item : prismItems){
                 prisms.add(item);
@@ -184,6 +195,7 @@ public class Main {
                 pyramids.add(item);
             }
             for (JMenuItem item : menuItems){
+                item.setBorder(menuBorder);
                 menuBar.add(item);
             }
             setJMenuBar(menuBar);
@@ -193,11 +205,7 @@ public class Main {
                 add(panel);
             }
 
-
-            //Setting Application Icon and Taskbar Icon
-            ImageIcon iconImage = new ImageIcon("icon.png");
-            setIconImage(iconImage.getImage());
-
+            //Adding extras
             add(volume);
             add(calculate);
             add(measurements);
@@ -206,6 +214,8 @@ public class Main {
             setSize(frameWidth,frameHeight);
             setLayout(null);
             setVisible(true);
+
+            //Set the "X" button to stop running the program.
             setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         }
