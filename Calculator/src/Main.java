@@ -4,6 +4,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Objects;
 
+/*TODO
+Make the screen dynamic (If the user expands the window everything in it should also expand).
+Add more shapes
+Fix warning messages
+Change visuals to be more appealing.
+ */
+
 public class Main {
     public static class mainDisplay extends JFrame{
         mainDisplay(){
