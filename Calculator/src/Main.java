@@ -26,9 +26,10 @@ public class Main {
                     rectPrism = new JMenuItem("Rectangular Prism"),
                     triPrism = new JMenuItem("Triangular Prism"),
                     cone = new JMenuItem("Cone"),
-                    sphere = new JMenuItem("Sphere");
+                    sphere = new JMenuItem("Sphere"),
+                    torus = new JMenuItem("Torus");
             JMenuItem[] prismItems = {rectPrism, triPrism};
-            JMenuItem[] menuItems = {cube, prisms, cone, sphere};
+            JMenuItem[] menuItems = {cube, prisms, cone, sphere, torus};
             JLabel SelectedShape = new JLabel("Select a shape");
 
             //Creating text fields for user inputs.
@@ -139,6 +140,13 @@ public class Main {
                             inputPanels[2].setVisible(true);
                             lengthLabel.setText("Length: ");
                         }
+                        case "Torus" -> {
+                            inputPanels[0].setVisible(true);
+                            lengthLabel.setText("Input Minor Radius: ");
+                            inputPanels[1].setVisible(true);
+                            heightLabel.setText("Input Major Radius: ");
+                            inputPanels[2].setVisible(false);
+                        }
 
                         default -> {
                             inputPanels[0].setVisible(true);
@@ -212,6 +220,9 @@ public class Main {
             if(!depth.getText().equals("")){
                 depthNum = Integer.parseInt(depth.getText());
             }
+            if (shape.getText().equals("Torus") && lengthNum > heightNum){
+                return "Min Radius < Maj Radius";
+            }
 
             try{
                 return switch (shape.getText()) {
@@ -220,6 +231,7 @@ public class Main {
                     case "Sphere" -> String.valueOf((4f/3f) * Math.PI * (Math.pow(lengthNum, 3)));
                     case "Cone" -> String.valueOf(Math.PI * (Math.pow(lengthNum, 2) * (heightNum/3)));
                     case "Triangular Prism" -> String.valueOf((lengthNum * heightNum * depthNum)/2);
+                    case "Torus" -> String.valueOf((Math.PI * Math.pow(lengthNum, 2)) * ((2 * Math.PI * heightNum)));
                     case "Select a shape" -> "Please select a shape";
                     default -> "Please input a length";
                 };
