@@ -175,6 +175,10 @@ public class Main {
             }
 
 
+            //Setting Application Icon and Taskbar Icon
+            ImageIcon iconImage = new ImageIcon("icon.png");
+            setIconImage(iconImage.getImage());
+
             add(volume);
             add(calculate);
             add(measurements);
