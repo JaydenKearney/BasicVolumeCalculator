@@ -20,9 +20,10 @@ public class Main {
                     triPrism = new JMenuItem("Triangular Prism"),
                     cone = new JMenuItem("Cone"),
                     sphere = new JMenuItem("Sphere"),
-                    torus = new JMenuItem("Torus");
+                    torus = new JMenuItem("Torus"),
+                    cylinder = new JMenuItem("Cylinder");
             JMenuItem[] prismItems = {rectPrism, triPrism};
-            JMenuItem[] menuItems = {cube, prisms, cone, sphere, torus};
+            JMenuItem[] menuItems = {cube, prisms, cone, sphere, torus, cylinder};
             JLabel SelectedShape = new JLabel("Select a shape");
 
             //Creating text fields for user inputs.
@@ -140,6 +141,12 @@ public class Main {
                             heightLabel.setText("Input Major Radius: ");
                             inputPanels[2].setVisible(false);
                         }
+                        case "Cylinder" -> {
+                            inputPanels[0].setVisible(true);
+                            lengthLabel.setText("Input Radius: ");
+                            inputPanels[2].setVisible(false);
+                            inputPanels[1].setVisible(true);
+                        }
 
                         default -> {
                             inputPanels[0].setVisible(true);
@@ -225,6 +232,7 @@ public class Main {
                     case "Cone" -> String.valueOf(Math.PI * (Math.pow(lengthNum, 2) * (heightNum/3)));
                     case "Triangular Prism" -> String.valueOf((lengthNum * heightNum * depthNum)/2);
                     case "Torus" -> String.valueOf((Math.PI * Math.pow(lengthNum, 2)) * ((2 * Math.PI * heightNum)));
+                    case "Cylinder" -> String.valueOf(Math.PI * Math.pow(lengthNum, 2) * heightNum);
                     case "Select a shape" -> "Please select a shape";
                     default -> "Please input a length";
                 };
