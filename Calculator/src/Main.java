@@ -15,15 +15,19 @@ public class Main {
             //Initialise items.
             JMenuBar menuBar = new JMenuBar();
             JMenu prisms = new JMenu("Prisms");
+            JMenu pyramids = new JMenu("Pyramids");
             JMenuItem cube = new JMenuItem("Cube"),
                     rectPrism = new JMenuItem("Rectangular Prism"),
                     triPrism = new JMenuItem("Triangular Prism"),
                     cone = new JMenuItem("Cone"),
                     sphere = new JMenuItem("Sphere"),
                     torus = new JMenuItem("Torus"),
-                    cylinder = new JMenuItem("Cylinder");
+                    cylinder = new JMenuItem("Cylinder"),
+                    triPyramid = new JMenuItem("Triangular Pyramid"),
+                    squarePyramid = new JMenuItem("Rectangular Pyramid");
             JMenuItem[] prismItems = {rectPrism, triPrism};
-            JMenuItem[] menuItems = {cube, prisms, cone, sphere, torus, cylinder};
+            JMenuItem[] pyramidItems = {triPyramid, squarePyramid};
+            JMenuItem[] menuItems = {prisms, pyramids, cube, cone, sphere, torus, cylinder};
             JLabel SelectedShape = new JLabel("Select a shape");
 
             //Creating text fields for user inputs.
@@ -122,18 +126,6 @@ public class Main {
                             inputPanels[2].setVisible(false);
 
                         }
-                        case "Triangular Prism" -> {
-                            inputPanels[0].setVisible(true);
-                            lengthLabel.setText("Input Length: ");
-                            inputPanels[1].setVisible(true);
-                            inputPanels[2].setVisible(true);
-                        }
-                        case "Rectangular Prism" -> {
-                            inputPanels[0].setVisible(true);
-                            inputPanels[1].setVisible(true);
-                            inputPanels[2].setVisible(true);
-                            lengthLabel.setText("Length: ");
-                        }
                         case "Torus" -> {
                             inputPanels[0].setVisible(true);
                             lengthLabel.setText("Input Minor Radius: ");
@@ -147,13 +139,18 @@ public class Main {
                             inputPanels[2].setVisible(false);
                             inputPanels[1].setVisible(true);
                         }
+                        case "Triangular Pyramid", "Rectangular Pyramid", "Rectangular Prism", "Triangular Prism" -> {
+                            lengthLabel.setText("Input Length: ");
+                            inputPanels[0].setVisible(true);
+                            inputPanels[1].setVisible(true);
+                            inputPanels[2].setVisible(true);
+                        }
 
                         default -> {
                             inputPanels[0].setVisible(true);
                             inputPanels[1].setVisible(true);
                             inputPanels[2].setVisible(true);
-                            lengthLabel.setText("Length: ");
-                            inputPanels[3].setVisible(true);
+                            lengthLabel.setText("Input Length: ");
                         }
                     }
 
@@ -162,6 +159,10 @@ public class Main {
             for (JMenuItem mainItem: menuItems){
                 if (mainItem.getText().equals("Prisms")){
                     for (JMenuItem groupedItem: prismItems){
+                        groupedItem.addActionListener(shape);
+                    }
+                }else if(mainItem.getText().equals("Pyramids")){
+                    for(JMenuItem groupedItem : pyramidItems){
                         groupedItem.addActionListener(shape);
                     }
                 }else{
@@ -178,6 +179,9 @@ public class Main {
             //Adding items to frame and adjusting frame settings.
             for (JMenuItem item : prismItems){
                 prisms.add(item);
+            }
+            for (JMenuItem item : pyramidItems){
+                pyramids.add(item);
             }
             for (JMenuItem item : menuItems){
                 menuBar.add(item);
@@ -233,6 +237,8 @@ public class Main {
                     case "Triangular Prism" -> String.valueOf((lengthNum * heightNum * depthNum)/2);
                     case "Torus" -> String.valueOf((Math.PI * Math.pow(lengthNum, 2)) * ((2 * Math.PI * heightNum)));
                     case "Cylinder" -> String.valueOf(Math.PI * Math.pow(lengthNum, 2) * heightNum);
+                    case "Triangular Pyramid" -> String.valueOf((((lengthNum * depthNum) / 2) * heightNum) / 3);
+                    case "Rectangular Pyramid" -> String.valueOf(((lengthNum * depthNum) * heightNum) / 3);
                     case "Select a shape" -> "Please select a shape";
                     default -> "Please input a length";
                 };
