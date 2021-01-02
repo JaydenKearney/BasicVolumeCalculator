@@ -7,11 +7,13 @@ import java.util.Objects;
 
 public class Main {
     public static class mainDisplay extends JFrame{
+        Font mainFont = new Font("Arial", Font.BOLD, 12);
         mainDisplay(){
             //Setting variables for visual dimensions.
             int frameHeight = 500;
             int frameWidth = 400;
             JLabel selectedMeasurement = new JLabel("Millimeter/s");
+            SetFont();
 
             //Initialise items.
             JMenuBar menuBar = new JMenuBar();
@@ -95,7 +97,6 @@ public class Main {
                 y += 50;
                 count += 1;
             }
-
             volume.setBounds(10,400,200,25);
             calculate.setBounds(225, 400, 150,25);
             measurements.setBounds(300, 100, 50,25);
@@ -173,7 +174,13 @@ public class Main {
             calculate.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    volume.setText(CalcVolume(selectedShape, lengthInput, heightInput, depthInput));
+                    String result = CalcVolume(selectedShape, lengthInput, heightInput, depthInput);
+                    if(result.equals("Min Radius < Maj Radius") || result.equals("Please use a number")){
+                        volume.setText(result);
+                    } else{
+                        volume.setText(String.format("%s %s\u00B3", result, measurements.getSelectedItem()));
+                    }
+
                 }
             });
 
@@ -220,19 +227,29 @@ public class Main {
 
         }
 
+        private void SetFont() {
+            UIManager.put("Button.font", mainFont);
+            UIManager.put("ComboBox.font", mainFont);
+            UIManager.put("MenuBar.font", mainFont);
+            UIManager.put("MenuItem.font", mainFont);
+            UIManager.put("Menu.font", mainFont);
+            UIManager.put("Label.font", mainFont);
+            UIManager.put("TextField.font", mainFont);
+        }
+
         private String CalcVolume(JLabel shape, JTextField length, JTextField height, JTextField depth) {
             //Calculates the volume of the selected shape with the selected side length
             float lengthNum = 0,
                     heightNum = 0,
                     depthNum = 0;
             if(!length.getText().equals("")){
-                lengthNum = Integer.parseInt(length.getText());
+                lengthNum = Float.parseFloat(length.getText());
             }
             if(!height.getText().equals("")){
-                heightNum = Integer.parseInt(height.getText());
+                heightNum = Float.parseFloat(height.getText());
             }
             if(!depth.getText().equals("")){
-                depthNum = Integer.parseInt(depth.getText());
+                depthNum = Float.parseFloat(depth.getText());
             }
             if (shape.getText().equals("Torus") && lengthNum > heightNum){
                 return "Min Radius < Maj Radius";
@@ -240,21 +257,21 @@ public class Main {
 
             try{
                 return switch (shape.getText()) {
-                    case "Cube" -> String.valueOf(Math.pow(lengthNum, 3));
-                    case "Rectangular Prism" -> String.valueOf(lengthNum * heightNum * depthNum);
-                    case "Sphere" -> String.valueOf((4f/3f) * Math.PI * (Math.pow(lengthNum, 3)));
-                    case "Cone" -> String.valueOf(Math.PI * (Math.pow(lengthNum, 2) * (heightNum/3)));
-                    case "Triangular Prism" -> String.valueOf((lengthNum * heightNum * depthNum)/2);
-                    case "Torus" -> String.valueOf((Math.PI * Math.pow(lengthNum, 2)) * ((2 * Math.PI * heightNum)));
-                    case "Cylinder" -> String.valueOf(Math.PI * Math.pow(lengthNum, 2) * heightNum);
-                    case "Triangular Pyramid" -> String.valueOf((((lengthNum * depthNum) / 2) * heightNum) / 3);
-                    case "Rectangular Pyramid" -> String.valueOf(((lengthNum * depthNum) * heightNum) / 3);
+                    case "Cube" -> String.format("%.2f", Math.pow(lengthNum, 3));
+                    case "Rectangular Prism" -> String.format("%.2f", lengthNum * heightNum * depthNum);
+                    case "Sphere" -> String.format("%.2f", (4f/3f) * Math.PI * (Math.pow(lengthNum, 3)));
+                    case "Cone" -> String.format("%.2f", Math.PI * (Math.pow(lengthNum, 2) * (heightNum/3)));
+                    case "Triangular Prism" -> String.format("%.2f", (lengthNum * heightNum * depthNum)/2);
+                    case "Torus" -> String.format("%.2f", (Math.PI * Math.pow(lengthNum, 2)) * ((2 * Math.PI * heightNum)));
+                    case "Cylinder" -> String.format("%.2f", Math.PI * Math.pow(lengthNum, 2) * heightNum);
+                    case "Triangular Pyramid" -> String.format("%.2f", (((lengthNum * depthNum) / 2) * heightNum) / 3);
+                    case "Rectangular Pyramid" -> String.format("%.2f", ((lengthNum * depthNum) * heightNum) / 3);
                     case "Select a shape" -> "Please select a shape";
                     default -> "Please input a length";
                 };
             }
             catch(Exception e){
-                System.out.print(e.getMessage());
+                //This catches if a user inputs anything that isn't a number.
                 return "Please use a number";
             }
 
