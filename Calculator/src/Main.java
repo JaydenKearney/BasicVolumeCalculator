@@ -62,7 +62,7 @@ public class Main {
             measurements.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    //Finds which item has been selected and changes it to be selected.
+                    //Finds which measurement item has been selected and shows the selection.
                     JComboBox cb = (JComboBox)e.getSource();
                     String selectedMeasure = (String)cb.getSelectedItem();
                     switch (Objects.requireNonNull(selectedMeasure)) {
@@ -102,12 +102,14 @@ public class Main {
             measurements.setBounds(300, 100, 50,25);
             selectedMeasurement.setBounds(300, 125, 75, 25);
 
-            //Button and menu item actions
+            //Menu item actions
             ActionListener shape = new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     String sourceText = e.getActionCommand();
+                    //Display selected item
                     selectedShape.setText(sourceText);
+                    //Change the UI to show specific inputs and labels for the item.
                     switch (sourceText) {
                         case "Cube" -> {
                             inputPanels[0].setVisible(true);
@@ -147,7 +149,6 @@ public class Main {
                             inputPanels[1].setVisible(true);
                             inputPanels[2].setVisible(true);
                         }
-
                         default -> {
                             inputPanels[0].setVisible(true);
                             inputPanels[1].setVisible(true);
@@ -158,6 +159,7 @@ public class Main {
 
                 }
             };
+            //Setting the grouped menu items into their specific groups.
             for (JMenuItem mainItem: menuItems){
                 if (mainItem.getText().equals("Prisms")){
                     for (JMenuItem groupedItem: prismItems){
@@ -178,13 +180,14 @@ public class Main {
                     if(result.equals("Min Radius < Maj Radius") || result.equals("Please use a number")){
                         volume.setText(result);
                     } else{
+                        // "\u00B3" is a supertext 3 (As in to the power of 3).
                         volume.setText(String.format("%s %s\u00B3", result, measurements.getSelectedItem()));
                     }
 
                 }
             });
 
-            //Styling
+            //Result styling
             Border menuBorder = BorderFactory.createMatteBorder(0,1,0,1, Color.GRAY),
                     resultBorder = BorderFactory.createRaisedBevelBorder();
             volume.setBorder(resultBorder);
@@ -222,11 +225,12 @@ public class Main {
             setLayout(null);
             setVisible(true);
 
-            //Set the "X" button to stop running the program.
+            //Set to stop running the program when the window is closed.
             setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         }
 
+        //Setting the programs font to the created font
         private void SetFont() {
             UIManager.put("Button.font", mainFont);
             UIManager.put("ComboBox.font", mainFont);
@@ -238,46 +242,45 @@ public class Main {
         }
 
         private String CalcVolume(JLabel shape, JTextField length, JTextField height, JTextField depth) {
-            //Calculates the volume of the selected shape with the selected side length
+            //Sets and resets the function variables to 0.
             float lengthNum = 0,
                     heightNum = 0,
                     depthNum = 0;
-            if(!length.getText().equals("")){
-                lengthNum = Float.parseFloat(length.getText());
-            }
-            if(!height.getText().equals("")){
-                heightNum = Float.parseFloat(height.getText());
-            }
-            if(!depth.getText().equals("")){
-                depthNum = Float.parseFloat(depth.getText());
-            }
-            if (shape.getText().equals("Torus") && lengthNum > heightNum){
-                return "Min Radius < Maj Radius";
-            }
-
+            //Tries to change the function variables if they have been given a new input.
             try{
-                return switch (shape.getText()) {
-                    case "Cube" -> String.format("%.2f", Math.pow(lengthNum, 3));
-                    case "Rectangular Prism" -> String.format("%.2f", lengthNum * heightNum * depthNum);
-                    case "Sphere" -> String.format("%.2f", (4f/3f) * Math.PI * (Math.pow(lengthNum, 3)));
-                    case "Cone" -> String.format("%.2f", Math.PI * (Math.pow(lengthNum, 2) * (heightNum/3)));
-                    case "Triangular Prism" -> String.format("%.2f", (lengthNum * heightNum * depthNum)/2);
-                    case "Torus" -> String.format("%.2f", (Math.PI * Math.pow(lengthNum, 2)) * ((2 * Math.PI * heightNum)));
-                    case "Cylinder" -> String.format("%.2f", Math.PI * Math.pow(lengthNum, 2) * heightNum);
-                    case "Triangular Pyramid" -> String.format("%.2f", (((lengthNum * depthNum) / 2) * heightNum) / 3);
-                    case "Rectangular Pyramid" -> String.format("%.2f", ((lengthNum * depthNum) * heightNum) / 3);
-                    case "Select a shape" -> "Please select a shape";
-                    default -> "Please input a length";
-                };
-            }
-            catch(Exception e){
-                //This catches if a user inputs anything that isn't a number.
+                if(!length.getText().equals("")){
+                    lengthNum = Float.parseFloat(length.getText());
+                }
+                if(!height.getText().equals("")){
+                    heightNum = Float.parseFloat(height.getText());
+                }
+                if(!depth.getText().equals("")){
+                    depthNum = Float.parseFloat(depth.getText());
+                }
+                if (shape.getText().equals("Torus") && lengthNum > heightNum){
+                    return "Min Radius < Maj Radius";
+                }}
+            catch (Exception e){
+                //If the user has not entered a number this will be returned and displayed.
                 return "Please use a number";
             }
-
+            //Calculates the volume of the selected shape.
+            return switch (shape.getText()) {
+                case "Cube" -> String.format("%.2f", Math.pow(lengthNum, 3));
+                case "Rectangular Prism" -> String.format("%.2f", lengthNum * heightNum * depthNum);
+                case "Sphere" -> String.format("%.2f", (4f/3f) * Math.PI * (Math.pow(lengthNum, 3)));
+                case "Cone" -> String.format("%.2f", Math.PI * (Math.pow(lengthNum, 2) * (heightNum/3)));
+                case "Triangular Prism" -> String.format("%.2f", (lengthNum * heightNum * depthNum)/2);
+                case "Torus" -> String.format("%.2f", (Math.PI * Math.pow(lengthNum, 2)) * ((2 * Math.PI * heightNum)));
+                case "Cylinder" -> String.format("%.2f", Math.PI * Math.pow(lengthNum, 2) * heightNum);
+                case "Triangular Pyramid" -> String.format("%.2f", (((lengthNum * depthNum) / 2) * heightNum) / 3);
+                case "Rectangular Pyramid" -> String.format("%.2f", ((lengthNum * depthNum) * heightNum) / 3);
+                case "Select a shape" -> "Please select a shape";
+                default -> "Please input a length";
+            };
         }
-
-
     }
+
+    //Runs the program and display.
     public static void main(String[] args) { new mainDisplay(); }
 }
