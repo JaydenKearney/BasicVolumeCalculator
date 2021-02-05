@@ -1,7 +1,7 @@
 <component name="ArtifactManager">
-  <artifact type="jar" name="4D Calculator:jar">
+  <artifact name="4D Calculator:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/4D_Calculator_jar</output-path>
-    <root id="archive" name="4D Calculator.jar">
+    <root id="root">
       <element id="module-output" name="4D Calculator" />
     </root>
   </artifact>
